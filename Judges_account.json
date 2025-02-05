@@ -1,87 +1,87 @@
 {
 "Judges_Account": [
       {
-          "Judge name": "Prof Ts Dr Khong Heng Yen",
+          "Judgename": "Prof Ts Dr Khong Heng Yen",
           "usercode": "yen1400"
       },
       {
-          "Judge name": "Mr Raymond Maurice Anak Stephan Bujang",
+          "Judgename": "Mr Raymond Maurice Anak Stephan Bujang",
           "usercode": "ang6614"
       },
       {
-          "Judge name": "Ts Zamri bin Sahaat",
+          "Judgename": "Ts Zamri bin Sahaat",
           "usercode": "aat6164"
       },
       {
-          "Judge name": "Prof Dr Saiful Bahari bin Mohd Yusoff",
+          "Judgename": "Prof Dr Saiful Bahari bin Mohd Yusoff",
           "usercode": "ohd3260"
       },
       {
-          "Judge name": "Assoc Prof Dr Leong Siow Hoo",
+          "Judgename": "Assoc Prof Dr Leong Siow Hoo",
           "usercode": "hoo6561"
       },
       {
-          "Judge name": "Assoc Prof Ts Dr Clotilda Petrus",
+          "Judgename": "Assoc Prof Ts Dr Clotilda Petrus",
           "usercode": "rus3421"
       },
       {
-          "Judge name": "Dr Liew Fui Kiew",
+          "Judgename": "Dr Liew Fui Kiew",
           "usercode": "iew0362"
       },
       {
-          "Judge name": "Dr Nur Tahirah binti Razali",
+          "Judgename": "Dr Nur Tahirah binti Razali",
           "usercode": "ali6356"
       },
       {
-          "Judge name": "Dr Annisa binti Jamali",
+          "Judgename": "Dr Annisa binti Jamali",
           "usercode": "ali4556"
       },
       {
-          "Judge name": "Dr Abang Mohammad Nizam bin Abang Kamaruddin",
+          "Judgename": "Dr Abang Mohammad Nizam bin Abang Kamaruddin",
           "usercode": "din6655"
       },
       {
-          "Judge name": "Dr Norfadzlan bin Yusup",
+          "Judgename": "Dr Norfadzlan bin Yusup",
           "usercode": "sup4002"
       },
       {
-          "Judge name": "Mdm Zalina binti Ibrahim",
+          "Judgename": "Mdm Zalina binti Ibrahim",
           "usercode": "him5510"
       },
       {
-          "Judge name": "Cikgu Bibi Izzatul Sahima binti Sheikh Rahimullah",
+          "Judgename": "Cikgu Bibi Izzatul Sahima binti Sheikh Rahimullah",
           "usercode": "lah5064"
       },
       {
-          "Judge name": "Ts Saidi bin Rasemi",
+          "Judgename": "Ts Saidi bin Rasemi",
           "usercode": "emi4104"
       },
       {
-          "Judge name": "Cikgu Prisicilla Anak Ngabang",
+          "Judgename": "Cikgu Prisicilla Anak Ngabang",
           "usercode": "ang1022"
       },
       {
-          "Judge name": "Cikgu Banu Latha A/P Maielraganam",
+          "Judgename": "Cikgu Banu Latha A/P Maielraganam",
           "usercode": "nam4622"
       },
       {
-          "Judge name": "Cikgu Issnu bin Dollah",
+          "Judgename": "Cikgu Issnu bin Dollah",
           "usercode": "lah1600"
       },
       {
-          "Judge name": "Cikgu Mohd Ariffin bin Madon",
+          "Judgename": "Cikgu Mohd Ariffin bin Madon",
           "usercode": "don3342"
       },
       {
-          "Judge name": "Cikgu Iswandy bin Ahamad",
+          "Judgename": "Cikgu Iswandy bin Ahamad",
           "usercode": "mad6631"
       },
       {
-          "Judge name": "Cikgu Ling Kah Tsaan",
+          "Judgename": "Cikgu Ling Kah Tsaan",
           "usercode": "aan6005"
       },
       {
-          "Judge name": "Cikgu Raihan bin Sapiee",
+          "Judgename": "Cikgu Raihan bin Sapiee",
           "usercode": "iee4416"
       }
     ]
