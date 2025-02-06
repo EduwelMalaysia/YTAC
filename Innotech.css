@@ -279,12 +279,12 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .timer-adjust-btn:hover {
-    background: #00c6ff;
+    background: #025370;
     transform: scale(1.1);
 }
 
 .timer-adjust-btn:active {
-    background: #007bb5;
+    background: #025370;
     transform: scale(1);
 }
 
@@ -300,7 +300,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 #start-timer-btn:hover, #reset-timer-btn:hover {
-    background: #00c6ff;
+    background: #025370;
 }
 
 #start-timer-btn:disabled {
