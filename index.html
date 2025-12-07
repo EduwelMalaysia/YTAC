@@ -1,113 +1,737 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ menuOpen: false }">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YTAC 2026 | Youth Tech Asia Challenge</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YTAC 2026 - Under Maintenance</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://storage.googleapis.com/ytac-email-assets/ytacicon.jpeg">
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/x-icon" href="assets/adminhub/landings/favicon.ico">
+
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #ffffff;
-            overflow: hidden;
-            /* Prevent scrolling on large screens */
+      body {
+        font-family: "Montserrat", sans-serif;
+        overflow-x: hidden;
+      }
+
+      .nav-link {
+        position: relative;
+        color: #4b5563;
+        transition: color 0.3s ease;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: #7c3aed;
+      }
+
+      .text-gradient-hover:hover {
+        background: linear-gradient(90deg, #7c3aed, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #7c3aed, #3b82f6);
+        transition: width 0.3s ease, left 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 60%;
+      }
+
+      .register-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        display: flex;
+        align-items: flex-start;
+        pointer-events: none;
+        z-index: 60;
+        overflow: visible;
+      }
+
+      .register-btn {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        margin-top: -40px;
+        margin-right: -40px;
+        pointer-events: auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        padding-right: 30px;
+        padding-top: 40px;
+
+        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: center;
+      }
+
+      .btn-surface {
+        position: absolute;
+        inset: 0;
+        background-color: #ef4444;
+        border-radius: 50%;
+        z-index: -1;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .btn-content {
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        text-transform: uppercase;
+        line-height: 1.1;
+        transform: translateZ(0);
+      }
+
+      .btn-content span.small {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .btn-content span.large {
+        font-size: 1.4rem;
+        font-weight: 800;
+      }
+
+      .register-btn:hover {
+        transform: scale(2.5) translateX(-30px);
+        z-index: 70;
+      }
+
+      .register-btn:hover .btn-surface {
+        background-color: #dc2626; /* Red-600 */
+        transform: rotate(-135deg); /* Spin the background significantly */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn-arrow-wrapper {
+        position: absolute;
+        inset: 0;
+        z-index: 20; /* Above text */
+        pointer-events: none;
+        opacity: 0;
+        transform: rotate(0deg);
+
+        transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); /* ease-out-ish, no overshooting bounce */
+      }
+
+      .btn-arrow-icon {
+        position: absolute;
+        top: 15px; /* Position strictly at the top inside the button/circle */
+        left: 50%;
+        transform: translateX(-30%) rotate(180deg); /* SVG Native points Left now */
+        width: 32px;
+        height: 32px;
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      }
+
+      .register-btn:hover .btn-arrow-wrapper {
+        opacity: 1;
+        transform: rotate(-180deg); /* Rotate anticlockwise to bottom */
+      }
+
+      /* Centered Nav Absolute */
+      .nav-center {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: max-content;
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 425px) {
+        .register-container {
+          position: relative;
+          height: auto;
+          padding: 10px;
+          margin: 0;
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        .register-btn {
+          width: auto;
+          min-width: auto;
+          height: auto;
+          margin: 0;
+          padding: 0.5rem 1.5rem;
+          border-radius: 9999px; /* Revert to pill on mobile */
+          transform-origin: center;
+          box-shadow: none;
+          outline: none;
+          align-items: center;
+          justify-content: center;
         }
 
-        .floating-element {
-            animation: float 6s ease-in-out infinite;
+        .btn-surface {
+          border-radius: 9999px;
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-20px);
-            }
-
-            100% {
-                transform: translateY(0px);
-            }
+        .register-btn:hover {
+          transform: scale(1.05);
         }
 
-        .glow-text {
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+        .register-btn:hover .btn-surface {
+          transform: none; /* No rotate on mobile */
         }
+
+        .btn-content {
+          display: block;
+          padding: 0;
+        }
+
+        .nav-center {
+          position: static;
+          transform: none;
+          width: auto;
+        }
+      }
+
+      /* Styles from Extra Head Block */
+      #countdown-days-image {
+        animation: countdown-image-spin 5s linear infinite;
+      }
+      #countdown-hours-image {
+        animation: countdown-image-spin-anticlockwise 4s linear infinite;
+      }
+      #countdown-minutes-image {
+        animation: countdown-image-spin 3s linear infinite;
+      }
+
+      @keyframes countdown-image-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+        @keyframes countdown-image-spin-anticlockwise {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(-360deg);
+        }
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translate(-50%, 0); }
+        50% { transform: translate(-50%, -20px); }
+      }
+
+      .floating-robot {
+        animation: float 4s ease-in-out infinite;
+      }
     </style>
-</head>
+  </head>
+  <body
+    class="bg-gray-50 flex flex-col min-h-screen"
+    x-data="{ menuOpen: false, activeSection: window.location.hash || '#home' }"
+  >
+    <header class="bg-white shadow-sm fixed w-full top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-24">
+          <div class="flex-shrink-0 flex items-center">
+            <a href="#" class="flex items-center gap-2" @click="activeSection = '#home'">
+              <img
+                src="assets/adminhub/landings/ytac/1. Header-Cover-Video/YTAC LOGO (without year)-02.png"
+                alt="YTAC Logo"
+                class="w-40"
+              />
+            </a>
+          </div>
 
-<body class="min-h-screen flex items-center justify-center p-4 relative">
+          <nav class="hidden md:flex space-x-2 md:space-x-8 items-center nav-center">
+            <a
+              href="#home"
+              @click="activeSection = '#home'"
+              :class="{ 'active': activeSection === '#home' }"
+              class="nav-link text-gradient-hover"
+              >Home</a
+            >
+            <a
+              href="#about"
+              @click="activeSection = '#about'"
+              :class="{ 'active': activeSection === '#about' }"
+              class="nav-link text-gradient-hover"
+              >About</a
+            >
+            <a
+              href="#competition"
+              @click="activeSection = '#competition'"
+              :class="{ 'active': activeSection === '#competition' }"
+              class="nav-link text-gradient-hover"
+              >Competition</a
+            >
+            <a
+              href="#gallery"
+              @click="activeSection = '#gallery'"
+              :class="{ 'active': activeSection === '#gallery' }"
+              class="nav-link text-gradient-hover"
+              >Gallery</a
+            >
+          </nav>
+          <div class="hidden md:flex items-center register-container">
+            <a href="#register" class="register-btn group">
+              <div class="btn-surface"></div>
 
-    <!-- Background decorative blobs -->
-    <div
-        class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob">
-    </div>
-    <div
-        class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000">
-    </div>
+              <div class="btn-arrow-wrapper">
+                <svg
+                  class="btn-arrow-icon"
+                  id="Curved_Arrow_24"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <rect width="24" height="24" stroke="none" fill="#fff" opacity="0" />
 
-    <main
-        class="glass-panel rounded-3xl p-8 md:p-12 max-w-4xl w-full flex flex-col md:flex-row items-center gap-12 relative z-10">
+                  <g transform="matrix(0.77 0 0 0.77 12 12)">
+                    <path
+                      style="
+                        stroke: none;
+                        stroke-width: 1;
+                        stroke-dasharray: none;
+                        stroke-linecap: butt;
+                        stroke-dashoffset: 0;
+                        stroke-linejoin: miter;
+                        stroke-miterlimit: 4;
+                        fill: rgb(255, 255, 255);
+                        fill-rule: nonzero;
+                        opacity: 1;
+                      "
+                      transform=" translate(-15, -15)"
+                      d="M 4 5 C 4 5.024 4.022 7.436999999999999 5.917 9.889 C 8.369 13.062 12.88 14.815 19 14.986 L 19 11 C 19 10.596 19.244 10.23 19.617 10.076 C 19.991 9.921000000000001 20.421 10.007 20.707 10.293000000000001 L 27.707 17.293 C 28.098 17.683999999999997 28.098 18.316 27.707 18.707 L 20.707 25.707 C 20.421 25.993000000000002 19.991 26.080000000000002 19.617 25.924 C 19.244 25.77 19 25.404 19 25 L 19 20.984 C 2.485 20.447 2 6.605 2 5 C 2 4.447 2.448 4 3 4 C 3.552 4 4 4.447 4 5 z"
+                      stroke-linecap="round"
+                    />
+                  </g>
+                </svg>
+              </div>
 
-        <!-- Illustration Section -->
-        <div class="w-full md:w-1/2 flex justify-center">
-            <div class="relative w-full max-w-[400px] aspect-square flex items-center justify-center">
-                <!-- Glow effect behind image -->
-                <div class="absolute inset-0 bg-gradient-to-tr from-blue-500/30 to-yellow-400/30 rounded-full blur-2xl">
+              <div class="btn-content">
+                <span class="small group-hover:text-yellow-200 transition-colors">REGISTER</span>
+                <span class="large">NOW</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="md:hidden flex items-center">
+            <a href="#register" class="mr-4 bg-red-500 text-white text-xs font-bold px-3 py-2 rounded-lg"> REGISTER </a>
+            <button @click="menuOpen = !menuOpen" class="text-gray-600 hover:text-purple-600 focus:outline-none p-2">
+              <svg class="h-8 w-8" x-show="!menuOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg class="h-8 w-8" x-show="menuOpen" x-cloak fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        x-show="menuOpen"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 -translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 -translate-y-2"
+        class="md:hidden bg-white border-t border-gray-100 shadow-lg absolute w-full left-0 z-40"
+      >
+        <div class="px-4 pt-2 pb-6 space-y-2">
+          <a
+            href="#home"
+            class="block px-3 py-3 rounded-md text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50"
+            >HOME</a
+          >
+          <a
+            href="#about"
+            class="block px-3 py-3 rounded-md text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50"
+            >ABOUT</a
+          >
+          <a
+            href="#competition"
+            class="block px-3 py-3 rounded-md text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50"
+            >COMPETITION</a
+          >
+          <a
+            href="#gallery"
+            class="block px-3 py-3 rounded-md text-base font-bold text-gray-700 hover:text-purple-600 hover:bg-purple-50"
+            >GALLERY</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow pt-24">
+      <div class="w-full bg-transparent">
+        <section id="home" class="relative w-full">
+          <div class="relative w-full mx-auto">
+            <div class="flex flex-col relative">
+              <div class="w-full z-10">
+                <img
+                  src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Header Cover.jpg"
+                  alt="YTAC Header Cover"
+                  class="w-full h-auto object-cover"
+                />
+              </div>
+
+              <div
+                class="w-full z-20 pointer-events-none -mt-24 -mb-24 min-[425px]:-mt-28 md:-mt-48 lg:-mt-64 xl:-mt-[360px] 2xl:-mt-[480px]"
+              >
+                <div class="w-full flex flex-col md:gap-2 text-center">
+                  <span
+                    class="text-lg min-[425px]:text-xl md:text-4xl lg:text-6xl 2xl:text-8xl font-bold uppercase text-white"
+                  >
+                    ytac 2026 is coming
+                  </span>
+                  <span
+                    class="mx-8 text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg font-semibold uppercase text-white"
+                  >
+                    igniting innovation • empowering young creators • shaping tomorrow
+                  </span>
+                  <div class="w-full z-10 mt-6 hidden md:block">
+                    <img
+                      src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png"
+                      alt="YTAC Arrow Down Circle"
+                      class="size-12 lg:size-16 object-contain mx-auto animate-bounce"
+                    />
+                  </div>
                 </div>
-                <img src="https://storage.googleapis.com/ytac-email-assets/mantainance.webp" alt="Maintenance Tools"
-                    class="floating-element relative z-10 w-full h-auto object-contain drop-shadow-2xl">
+                <div
+                  class="w-full z-20 pointer-events-none -mt-5 min-[425px]:-mt-12 md:-mt-32 lg:-mt-48 xl:-mt-56 2xl:-mt-48"
+                >
+                  <img
+                    src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Part 1 Grid.png"
+                    alt="YTAC Grid Pattern"
+                    class="w-full h-auto object-contain"
+                  />
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
+        </section>
 
-        <!-- Content Section -->
-        <div class="w-full md:w-1/2 text-center md:text-left space-y-6">
+        <section
+          id="about"
+          class="relative z-30 py-12 md:py-20 bg-transparent -mt-10 md:-mt-48 lg:-mt-64 xl:-mt-96"
+        >
+          <div class="max-w-7xl mx-auto px-4 max-[425px]:px-2">
+            <div class="w-full flex flex-col md:gap-2 text-center">
+              <span
+                class="text-xs md:text-sm lg:text-xl xl:text-2xl 2xl:text-3xl font-bold uppercase text-[#3e3791]"
+              >
+                countdown to ytac 2026 grand launch
+              </span>
+              <span
+                class="text-lg min-[425px]:text-xl md:text-5xl lg:text-7xl 2xl:text-[86px] font-bold uppercase text-[#3e3791]"
+              >
+                are you ready?
+              </span>
+            </div>
+
             <div
-                class="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-semibold tracking-wider uppercase mb-2">
-                Under Maintenance
-            </div>
-
-            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-                We are Building <br>
+              class="flex flex-row items-center justify-center gap-2 xl:gap-8 mt-8"
+            >
+              <div class="w-full relative flex flex-col items-center">
+                <img
+                id="countdown-days-image"
+                  src="assets/adminhub/landings/ytac/1. Header-Cover-Video/PNG 2.png"
+                  alt="YTAC Countdown Section"
+                  class="w-full h-auto object-contain"
+                />
                 <span
-                    class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 glow-text">Something
-                    Amazing</span>
-            </h1>
-
-            <p class="text-slate-300 text-lg md:text-xl leading-relaxed">
-                YTAC 2026 is currently under construction. We're upgrading our platform to bring you a better
-                experience. <br> <br>
-                If you looking for Handbook, Template and Rules and Regulation of Competition, please refer:
-                <a href=" https://drive.google.com/drive/folders/1gBAp9hWHsYSXCKSAyaJ1kDjAg9UdmsFT?usp=drive_link"
-                    class="text-blue-500 hover:underline" target="_blank">Click Me</a>
-            </p>
-
-            <div class="pt-4">
-                <p class="text-slate-400 text-sm font-medium">Check back soon for updates!</p>
+                  id="countdown-days"
+                  class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[70%] md:-translate-y-[60%]  text-white font-extrabold text-4xl md:text-6xl lg:text-8xl 2xl:text-[108px]"
+                >
+                  00
+                </span>
+                <div
+                  class="text-sm lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold uppercase text-[#3e3791]"
+                >
+                  days
+                </div>
+              </div>
+              <span class="text-[#0fa8c3] text-3xl md:text-5xl font-extrabold"
+                >:</span
+              >
+              <div class="w-full relative flex flex-col items-center">
+                <img
+                id="countdown-hours-image"
+                  src="assets/adminhub/landings/ytac/1. Header-Cover-Video/PNG 2.png"
+                  alt="YTAC Countdown Section"
+                  class="w-full h-auto object-contain"
+                />
+                <span
+                  id="countdown-hours"
+                  class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[70%] md:-translate-y-[60%]  text-white font-extrabold text-4xl md:text-6xl lg:text-8xl 2xl:text-[108px]"
+                >
+                  00
+                </span>
+                <div
+                  class="text-sm lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold uppercase text-[#3e3791]"
+                >
+                  hours
+                </div>
+              </div>
+              <span class="text-[#0fa8c3] text-3xl md:text-5xl font-extrabold">:</span>
+              <div class="w-full relative flex flex-col items-center">
+                <img
+                id="countdown-minutes-image"
+                  src="assets/adminhub/landings/ytac/1. Header-Cover-Video/PNG 2.png"
+                  alt="YTAC Countdown Section"
+                  class="w-full h-auto object-contain"
+                />
+                <span
+                  id="countdown-minutes"
+                  class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[70%] md:-translate-y-[60%]  text-white font-extrabold text-4xl md:text-6xl lg:text-8xl 2xl:text-[108px]"
+                >
+                  00
+                </span>
+                <div
+                  class="text-sm lg:text-2xl xl:text-3xl 2xl:text-4xl font-bold uppercase text-[#3e3791]"
+                >
+                  minutes
+                </div>
+              </div>
             </div>
-        </div>
 
+            <div class="w-full flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 my-16 ">
+              <button class="hover:scale-105 transition-all duration-300 shadow-md shadow-[#fd4a4a] bg-[#fd4a4a] text-white px-6 md:px-10 lg:px-16 py-2 md:py-4 rounded-3xl font-bold uppercase flex flex-col items-center space-y-1 md:space-y-2">
+                <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">Local Students</span>
+                <span class="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">REGISTER NOW</span>
+                <hr class="w-full my-1 border-gray-50" />
+                <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">DOWNLOAD HANDBOOK <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png" alt="YTAC Arrow Down Circle" class="ml-2 size-5 inline-block object-contain mx-auto"></span>
+              </button>
+
+              <button class="hover:scale-105 transition-all duration-300 shadow-md shadow-[#0fa8c3] bg-[#0fa8c3] text-white px-6 md:px-10 lg:px-16 py-2 md:py-4 rounded-3xl font-bold uppercase flex flex-col items-center space-y-1 md:space-y-2">
+                <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">International Students</span>
+                <span class="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">REGISTER NOW</span>
+                <hr class="w-full my-1 border-gray-50" />
+                <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">DOWNLOAD HANDBOOK <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png" alt="YTAC Arrow Down Circle" class="ml-2 size-5 inline-block object-contain mx-auto"></span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="competition" class="md:py-20">
+          <div class="w-full">
+            <div>
+              <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Button PAJSK FA.jpg" alt="PAJSK Banner" class="w-full h-auto object-contain">
+            </div>
+            <div class="w-full">
+              <iframe src="https://drive.google.com/file/d/1r5oXSPT9vQHR3nvW372dJOimTpvmDqxE/preview" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" class="aspect-video w-full">
+              </iframe>
+            </div>
+            <div class="w-full relative">
+              <img src="assets/adminhub/landings/ytac/2. About/About Background.png" alt="Background" class="w-full h-auto object-contain">
+              <div class="absolute inset-0 flex flex-col items-center justify-start pt-8 md:pt-16 px-4 md:px-12 text-center text-white h-full">
+                <div class="mx-10 md:mt-10 lg:mt-20 ">
+                    <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/YTAC LOGO (without year)-02.png"
+                        alt="YTAC Logo" class="w-full h-full object-contain">
+                </div>
+
+                <h2 class="text-lg md:text-2xl lg:text-3xl font-bold uppercase mb-4">
+                    About Youth Tech Asia Challenge (YTAC)
+                </h2>
+
+                <p class="text-xs md:text-sm lg:text-base max-w-4xl mx-2 md:mx-6 mb-8 md:mb-12 leading-tight sm:leading-5 opacity-90">
+                    Youth Tech Asia Challenge (YTAC) is an innovation-driven competition designed to empower young talents across Asia to explore coding, technology, engineering, and creativity. Each year, we gather top-performing students to compete, collaborate, and innovate solutions for the future.
+                </p>
+
+                <div class="grid grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-md xl:max-w-6xl w-full">
+                    <img src="assets/adminhub/landings/ytac/2. About/Component 13 – 1.png" alt="STEM Coding" class="w-full h-full object-contain hover:scale-105 transition-all duration-300">
+
+                    <img src="assets/adminhub/landings/ytac/2. About/Component 14 – 1.png" alt="Students" class="w-full h-full object-contain hover:scale-105 transition-all duration-300">
+
+                    <img src="assets/adminhub/landings/ytac/2. About/Component 15 – 1.png" alt="Accessible" class="w-full h-full object-contain hover:scale-105 transition-all duration-300">
+
+                    <img src="assets/adminhub/landings/ytac/2. About/Component 16 – 1.png" alt="Recognized" class="w-full h-full object-contain hover:scale-105 transition-all duration-300">
+                </div>
+
+                <div class="relative w-full max-w-4xl mx-auto mt-32 sm:mt-48 md:mt-64 lg:mt-[40rem] mb-20" x-data="{ year: '2025' }">
+                  <img src="assets/adminhub/landings/ytac/2. About/Element Robot.png" 
+                      alt="Robot Mascot" 
+                      class="absolute -top-[5rem] left-1/2 w-40 md:w-56 floating-robot z-10 filter drop-shadow-xl">
+                  
+                  <div class="bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl p-3 md:p-12 py-10 md:py-20 lg:py-32 relative text-[#3e3791]">
+                      
+                    <div class="text-center mb-8 md:mb-12">
+                        <h2 class="text-2xl md:text-4xl font-extrabold uppercase mb-2">Competition History Events</h2>
+                        <p class="text-sm md:text-base font-semibold opacity-80">Click on the event to view more details about it!</p>
+                    </div>
+
+                    <div class="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-12 relative z-0">
+                        <button @click="year = '2025'" 
+                                  class="relative group transition-transform hover:scale-105 focus:outline-none"
+                                  :class="year === '2025' ? 'z-20 scale-110' : 'z-10 opacity-70 hover:opacity-100'">
+                            <div class="bg-[#3e3791] text-white w-24 h-12 md:w-32 md:h-16 flex items-center justify-center rounded-[50%_50%_70%_30%_/_30%_50%_50%_70%] transform -rotate-6 shadow-lg font-extrabold text-xl md:text-2xl">
+                                2025
+                            </div>
+                        </button>
+
+                        <button @click="year = '2024'" 
+                                  class="relative group transition-transform hover:scale-105 focus:outline-none"
+                                  :class="year === '2024' ? 'z-20 scale-110' : 'z-10 opacity-70 hover:opacity-100'">
+                            <div class="bg-[#00e5ff] text-white w-24 h-12 md:w-32 md:h-16 flex items-center justify-center rounded-[30%_70%_70%_30%_/_30%_30%_70%_70%] transform rotate-3 shadow-lg font-extrabold text-xl md:text-2xl">
+                                2024
+                            </div>
+                        </button>
+
+                        <button @click="year = '2023'" 
+                                  class="relative group transition-transform hover:scale-105 focus:outline-none"
+                                  :class="year === '2023' ? 'z-20 scale-110' : 'z-10 opacity-70 hover:opacity-100'">
+                            <div class="bg-[#6a65ac] text-white w-24 h-12 md:w-32 md:h-16 flex items-center justify-center rounded-[60%_40%_30%_70%_/_60%_30%_70%_40%] transform -rotate-3 shadow-lg font-extrabold text-xl md:text-2xl">
+                                2023
+                            </div>
+                        </button>
+
+                        <button @click="year = '2022'" 
+                                  class="relative group transition-transform hover:scale-105 focus:outline-none"
+                                  :class="year === '2022' ? 'z-20 scale-110' : 'z-10 opacity-70 hover:opacity-100'">
+                            <div class="bg-[#b9359e] text-white w-24 h-12 md:w-32 md:h-16 flex items-center justify-center rounded-[40%_60%_60%_40%_/_40%_60%_30%_70%] transform rotate-6 shadow-lg font-extrabold text-xl md:text-2xl">
+                                2022
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="">
+                      <div x-show="year === '2025'" class="space-y-8" 
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 transform translate-y-4"
+                            x-transition:enter-end="opacity-100 transform translate-y-0">
+                          
+                          <div class="text-center px-4">
+                              <h3 class="text-xl md:text-2xl font-black uppercase text-[#3e3791] mb-2">【 YTAC 2025 】 MALAYSIA – KUCHING SARAWAK</h3>
+                              <p class="font-semibold text-xs md:text-sm leading-relaxed text-[#3e3791] max-w-3xl mx-auto mb-6 lg:mb-12">
+                                  An international competition founded by Eduwel, inviting students from Vietnam, Thailand, China, and Indonesia to compete and collaborate in Malaysia. Participants are tasked with proposing creative, tech-driven solutions under a unifying theme: Automation in the fields of Lifestyle & Security, Health, Transportation, and Education.
+                              </p>
+                              <img src="assets/adminhub/landings/ytac/2. About/Component 22 – 1.png" class="w-full object-contain mx-auto">
+                          </div>
+
+                          <div class="text-center px-4">
+                              <h3 class="text-xl md:text-2xl font-black uppercase text-[#3e3791] mb-2">【 ICIA 2025 】 VIETNAM – HO CHI MINH</h3>
+                              <p class="font-semibold text-xs md:text-sm leading-relaxed text-[#3e3791] max-w-3xl mx-auto mb-6 lg:mb-12">
+                                  An international competition jointly organized by Eduwel and Shengxuan. Students must pass two qualifying rounds — YTAC and ICIA — by solving real-world challenges, earning their place in the ultimate showdown at IITS.
+                              </p>
+                              <img src="assets/adminhub/landings/ytac/2. About/Component 22 – 1.png" class="w-full object-contain mx-auto">
+                          </div>
+
+                          <div class="text-center px-4">
+                              <h3 class="text-xl md:text-2xl font-black uppercase text-[#3e3791] mb-2">【 IITS 2025 】 CHINA – BEIJING</h3>
+                              <p class="font-semibold text-xs md:text-sm leading-relaxed text-[#3e3791] max-w-3xl mx-auto">
+                                  An international competition jointly organized by Eduwel and Shengxuan. Students must pass two qualifying rounds — YTAC and ICIA — by solving real-world challenges, earning their place in the ultimate showdown at IITS.
+                              </p>
+                          </div>
+                      </div>
+                      
+                      <div x-show="year === '2024'" class="text-center py-20" x-cloak>
+                          <h3 class="text-2xl font-bold text-gray-400">2024 Events Content Coming Soon</h3>
+                      </div>
+                      <div x-show="year === '2023'" class="text-center py-20" x-cloak>
+                          <h3 class="text-2xl font-bold text-gray-400">2023 Events Content Coming Soon</h3>
+                      </div>
+                      <div x-show="year === '2022'" class="text-center py-20" x-cloak>
+                          <h3 class="text-2xl font-bold text-gray-400">2022 Events Content Coming Soon</h3>
+                      </div>
+
+                    </div>
+                  </div>
+                  
+                  <div class="mt-8 md:mt-12 text-center text-black md:text-white space-y-2 flex flex-col items-center">
+                    <span class="text-xs md:text-sm font-bold tracking-widest uppercase opacity-90">View Past Event</span>
+                    <h3 class="text-3xl md:text-5xl font-black italic uppercase tracking-wider mb-2" style="font-family: 'Montserrat', sans-serif;">Highlights</h3>
+                    
+                    <div class="p-2 rounded-full hover:backdrop-blur-sm  cursor-pointer hover:bg-white/30 transition-all mt-2 duration-300">
+
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:w-8 md:h-8 text-black md:text-white" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17l5-5-5-5M19.8 12H9M13 22a10 10 0 1 1 0-20"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="gallery" class=" bg-gray-50">
+          <div class="w-full">
+            <img src="assets/adminhub/landings/ytac/Web 1920 - 1.jpg" class="w-full object-cover" alt="">
+          </div>
+          
+          <div class="w-full">
+            <img src="assets/adminhub/landings/ytac/Web 1920 - 2.jpg" class="w-full object-cover" alt="">
+          </div>
+        </section>
+      </div>
     </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const END_TIME_STRING = "2026-01-01T00:00:00"; 
 
-    <footer class="absolute bottom-4 text-slate-500 text-xs">
-        &copy; 2025 YTAC. All rights reserved.
-    </footer>
+        const targetDate = new Date(END_TIME_STRING).getTime();
 
-</body>
+        const daysEl = document.getElementById('countdown-days');
+        const hoursEl = document.getElementById('countdown-hours');
+        const minutesEl = document.getElementById('countdown-minutes');
 
+        function updateCountdown() {
+          const now = new Date().getTime();
+          const distance = targetDate - now;
+
+          if (distance < 0) {
+            daysEl.innerText = "00";
+            hoursEl.innerText = "00";
+            minutesEl.innerText = "00";
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+          daysEl.innerText = days;
+          hoursEl.innerText = hours < 10 ? "0" + hours : hours;
+          minutesEl.innerText = minutes < 10 ? "0" + minutes : minutes;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+      });
+    </script>
+  </body>
 </html>
