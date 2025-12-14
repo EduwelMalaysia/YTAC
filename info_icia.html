@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="icon" type="image/x-icon" href="assets/adminhub/landings/ICIA 2025.png" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <link rel="stylesheet" href="assets/adminhub/assets/css/styles.css" />
+    <title>ICIA</title>
+  </head>
+
+  <body>
+    <div
+      class="relative w-full min-h-screen overflow-hidden text-zinc-700/90"
+      x-data="{ showHeader: false, showContent: false, showCats: false }"
+      x-intersect.threshold.10="showHeader = true; showContent = true; showCats = true"
+    >
+      <img
+        src="assets/adminhub/landings/Desktop Background@300x-8.png"
+        alt="Background"
+        class="absolute inset-0 w-full h-full object-cover -z-10 hidden md:block"
+      />
+      <img
+        src="assets/adminhub/landings/Mobile Background@300x-8.png"
+        alt="Background"
+        class="absolute inset-0 w-full h-full object-cover -z-10 md:hidden"
+      />
+
+      <main class="relative z-10 p-6 md:p-16 max-w-7xl mx-auto">
+        <section
+          class="flex justify-center items-center mb-12 transition-all duration-1000 ease-out"
+          :class="showHeader ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+        >
+          <img src="assets/adminhub/landings/ICIA 2025.png" alt="ICIA Logo" class="w-40 md:w-52 drop-shadow-lg" />
+        </section>
+
+        <section class="flex flex-col gap-3 mb-12">
+          <h2
+            class="text-2xl md:text-3xl font-bold transition-all duration-1000 delay-100 ease-out"
+            :class="showContent ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'"
+          >
+            About the Event
+          </h2>
+
+          <p
+            class="text-sm md:text-base text-zinc-700/80 leading-relaxed transition-all duration-1000 delay-300 ease-out"
+            :class="showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+          >
+            The International Creativity & Innovation Award (ICIA) is the next stage of the Youth Tech Asia Challenge
+            (YTAC), organized by Krya. It serves as an international platform where outstanding students from YTAC
+            advance to compete alongside participants from countries such as the Philippines, Thailand, Vietnam, Sri
+            Lanka, and Indonesia. At ICIA, students not only further refine their ideas and skills, but also gain
+            valuable experience by collaborating and competing at a higher level. As one of the key pathways leading to
+            the IITS global finals, ICIA plays a crucial role in preparing young innovators to take their solutions to
+            the world stage.
+          </p>
+        </section>
+
+        <section class="flex flex-col gap-6 mb-12">
+          <h2
+            class="text-2xl md:text-3xl font-bold transition-all duration-1000 delay-100 ease-out"
+            :class="showCats ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'"
+          >
+            Categories
+          </h2>
+
+          <div class="space-y-6">
+            <div
+              class="flex items-start transition-all duration-1000 delay-300 ease-out"
+              :class="showCats ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'"
+            >
+              <div class="mt-1 flex-shrink-0">
+                <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <a
+                href="https://www.instagram.com/reel/DFhtQngvy8a/?igsh=MWFuZWN0ZmRkZGN2YQ"
+                class="ml-4 text-base md:text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Challenge by Krya Global: Sustainable Foods Issue
+              </a>
+            </div>
+
+            <div
+              class="flex items-start transition-all duration-1000 delay-500 ease-out"
+              :class="showCats ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'"
+            >
+              <div class="mt-1 flex-shrink-0">
+                <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <a
+                href="https://www.instagram.com/reel/DFhtQngvy8a/?igsh=MWFuZWN0ZmRkZGN2YQ"
+                class="ml-4 text-base md:text-lg font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Challenge by SEAMEO secretary: Quality Education Issue
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="flex flex-col gap-3 mb-12 items-center text-center">
+          <a
+            href="https://drive.google.com/file/d/1ML_yy4_QpA9dLgx0M2o5yMh7MstcWMhT/view"
+            target="_blank"
+            class="group inline-flex items-center gap-2 text-lg md:text-xl font-bold text-red-600 hover:text-blue-700 transition-all duration-300 transform hover:scale-105 bg-white/50 px-6 py-3 rounded-full shadow-sm hover:shadow-md"
+          >
+            <i class="fa-solid fa-hand-point-right animate-bounce"></i>
+            <span>Click me to view the handbook</span>
+          </a>
+        </section>
+
+        <div class="flex justify-center items-center">
+          <a
+            href="index.html#competition"
+            class="bg-white text-center w-48 rounded-2xl h-14 relative text-black text-xl font-semibold group"
+          >
+            <div
+              class="bg-sky-500 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="25px" width="25px">
+                <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#000000"></path>
+                <path
+                  d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
+                  fill="#000000"
+                ></path>
+              </svg>
+            </div>
+            <p class="translate-x-3 translate-y-3">Go Back</p>
+          </a>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
