@@ -18,6 +18,9 @@
     <link rel="icon" type="image/x-icon" href="assets/adminhub/landings/favicon.ico">
 
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
       body {
         font-family: "Montserrat", sans-serif;
         overflow-x: hidden;
@@ -250,8 +253,58 @@
         50% { transform: translate(-50%, -20px); }
       }
 
+
       .floating-robot {
         animation: float 4s ease-in-out infinite;
+      }
+
+      @keyframes float-y {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
+
+      .animate-float-y-slow {
+        animation: float-y 6s ease-in-out infinite;
+      }
+      
+      .animate-float-y-fast {
+        animation: float-y 4s ease-in-out infinite;
+      }
+
+      /* Text Flipper Styles */
+      .perspective-container {
+        perspective: 1000px;
+        display: inline-block;
+      }
+      
+      .flipper {
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+        display: inline-block;
+      }
+
+      .flipper.flipping {
+        transform: rotateX(-90deg); /* Rotate halfway to hide */
+      }
+      
+      /* We will cheat slightly: Instead of a full 180 flip with front/back faces which can be complex to sync with text content updates,
+         we will use a transition that rotates out (-90deg), changes text, resets to +90deg instantly, and rotates in (0deg). 
+         But standard flip clock usually has upper and lower halves. 
+         Given the constraint "flipping clock style" for *text phrases*, a vertical tumbling effect (RotateX) is usually sufficient.
+      */
+      
+      .text-flip-enter-active,
+      .text-flip-leave-active {
+        transition: all 0.5s ease;
+      }
+      .text-flip-enter-start {
+        opacity: 0;
+        transform: translateY(20px) rotateX(-90deg);
+      }
+      .text-flip-leave-end {
+        opacity: 0;
+        transform: translateY(-20px) rotateX(90deg);
       }
     </style>
   </head>
@@ -303,7 +356,7 @@
             >
           </nav>
           <div class="hidden md:flex items-center register-container">
-            <a href="https://forms.gle/Bu4acoMv8Cb7Ztrn8" target="_blank" class="register-btn group">
+            <a href="#countdown" class="register-btn group">
               <div class="btn-surface"></div>
 
               <div class="btn-arrow-wrapper">
@@ -341,7 +394,7 @@
                 </svg>
               </div>
 
-              <div class="btn-content">
+              <div class="btn-content" >
                 <span class="small group-hover:text-yellow-200 transition-colors">REGISTER</span>
                 <span class="large">NOW</span>
               </div>
@@ -349,7 +402,7 @@
           </div>
 
           <div class="md:hidden flex items-center">
-            <a href="#register" class="mr-4 bg-red-500 text-white text-xs font-bold px-3 py-2 rounded-lg"> REGISTER </a>
+            <a href="#countdown" class="mr-4 bg-red-500 text-white text-xs font-bold px-3 py-2 rounded-lg"> REGISTER </a>
             <button @click="menuOpen = !menuOpen" class="text-gray-600 hover:text-purple-600 focus:outline-none p-2">
               <svg class="h-8 w-8" x-show="!menuOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -399,56 +452,128 @@
 
     <main class="flex-grow pt-24">
       <div class="w-full bg-transparent">
-        <section id="home" class="relative w-full">
-          <div class="relative w-full mx-auto">
-            <div class="flex flex-col relative">
+      <div class="w-full bg-transparent">
+        <div class="sticky top-0 md:-top-[30vh] xl:-top-[50vh] 2xl:-top-[70vh] z-0 flex flex-col bg-white"
+             x-data="{ 
+               scrollPt: 0,
+               get opacity() {
+                 const w = window.innerWidth;
+                 const h = window.innerHeight;
+                 let factor = 0;
+                 if (w >= 1440) factor = 0.7;
+                 else if (w >= 1280) factor = 0.6;
+                 else if (w >= 768) factor = 0.3;
+                 
+                 const start = h * factor;
+                 if (this.scrollPt < start) return 1;
+                 return Math.max(0, 1 - (this.scrollPt - start) / 500);
+               }
+             }" 
+             @scroll.window="scrollPt = window.pageYOffset">
+          <section id="home" class="relative w-full flex-grow"
+                   :style="`opacity: ${opacity}`">
+          <div class="relative w-full mx-auto h-full">
+            <div class="flex flex-col relative h-full justify-between">
               <div class="w-full z-10">
-                <img
-                  src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Header Cover.jpg"
-                  alt="YTAC Header Cover"
-                  class="w-full h-auto object-cover"
-                />
+                <picture>
+                  <source media="(min-width: 1024px)" srcset="assets/adminhub/landings/ytac/1.%20Header-Cover-Video/YTAC%202026%20Desktop%20Cover%20without%20element.jpg">
+                  <img
+                    src="assets/adminhub/landings/ytac/1.%20Header-Cover-Video/Header%20Cover.jpg"
+                    alt="YTAC Header Cover"
+                    class="w-full h-auto object-cover"
+                  />
+                </picture>
+                
+                <!-- Floating Elements -->
+                <div class="absolute inset-0 pointer-events-none z-20 overflow-hidden">
+                   <!-- SpaceShip -->
+                   <img 
+                    src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Element SpaceShip.png" 
+                    alt="Spaceship Element"
+                    class="hidden lg:block absolute top-[40%] right-[5%] w-24 md:w-48 lg:w-64 xl:w-80 animate-float-y-slow opacity-90 object-contain"
+                   >
+                   <!-- Code Element -->
+                   <img 
+                    src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Element Code.png" 
+                    alt="Code Element"
+                    class="hidden lg:block absolute top-[35%] left-[5%] md:left-[10%] w-16 md:w-28 lg:w-40 xl:w-48 animate-float-y-fast opacity-90 object-contain"
+                   >
+                </div>
               </div>
 
               <div
-                class="w-full z-20 pointer-events-none -mt-24 -mb-24 min-[425px]:-mt-28 md:-mt-48 lg:-mt-64 xl:-mt-[360px] 2xl:-mt-[480px]"
+                class="w-full z-20 pointer-events-none -mt-24 -mb-24 min-[425px]:-mt-28 md:-mt-48 lg:-mt-48 xl:-mt-[260px] 2xl:-mt-[360px]"
               >
-                <div class="w-full flex flex-col md:gap-2 text-center">
+                <div class="w-full flex flex-col text-center">
                   <span
-                    class="text-lg min-[425px]:text-xl md:text-4xl lg:text-6xl 2xl:text-8xl font-bold uppercase text-white"
+                    class="text-lg min-[425px]:text-xl md:text-4xl lg:text-5xl 2xl:text-7xl font-bold uppercase text-white"
                   >
                     ytac 2026 is coming
                   </span>
-                  <span
-                    class="mx-8 text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg font-semibold uppercase text-white"
+                  <!-- Dynamic Flipping Tagline -->
+                  <div
+                    class="mx-8 h-4 md:h-12 flex items-center justify-center text-[7px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg font-semibold uppercase text-white overflow-hidden"
+                    x-data="{
+                      words: ['TOMORROW', 'TODAY'],
+                      curr: 0,
+                      flip: false,
+                      init() {
+                        setInterval(() => {
+                          this.flip = true;
+                          setTimeout(() => {
+                            this.curr = (this.curr + 1) % this.words.length;
+                            const el = this.$refs.flip;
+                            el.style.transition = 'none';
+                            el.style.transform = 'rotateX(90deg)';
+                            void el.offsetHeight;
+                            el.style.transition = '';
+                            requestAnimationFrame(() => {
+                                el.style.transform = '';
+                                this.flip = false;
+                            });
+                          }, 600);
+                        }, 3000);
+                      }
+                    }"
                   >
-                    igniting innovation • empowering young creators • shaping tomorrow
-                  </span>
-                  <div class="w-full z-10 mt-6 hidden md:block">
+                    <span class="whitespace-nowrap mr-1 md:mr-2">
+                      igniting innovation <span class="text-[#0fa8c3] mx-1 md:mx-2">•</span> 
+                      empowering young creators <span class="text-[#0fa8c3] mx-1 md:mx-2">•</span> 
+                      shaping
+                    </span>
+                    
+                    <div class="perspective-container inline-grid grid-cols-1 grid-rows-1 items-center justify-items-start">
+                      <!-- Ghost Element for Width (Longest wrod) -->
+                      <span class="col-start-1 row-start-1 opacity-0 pointer-events-none select-none whitespace-nowrap">TOMORROW</span>
+                      <!-- Actual Flipper -->
+                      <span class="flipper col-start-1 row-start-1 block whitespace-nowrap text-[#0fa8c3]" :class="{ 'flipping': flip }" x-ref="flip" x-text="words[curr]"></span>
+                    </div>
+                  </div>
+                  <div class="w-full z-10 mt-4 hidden md:block pb-10">
                     <img
                       src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png"
                       alt="YTAC Arrow Down Circle"
-                      class="size-12 lg:size-16 object-contain mx-auto animate-bounce"
+                      class="size-12 object-contain mx-auto animate-bounce"
                     />
                   </div>
                 </div>
-                <div
-                  class="w-full z-20 pointer-events-none -mt-5 min-[425px]:-mt-12 md:-mt-32 lg:-mt-48 xl:-mt-56 2xl:-mt-48"
-                >
-                  <img
-                    src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Part 1 Grid.png"
-                    alt="YTAC Grid Pattern"
-                    class="w-full h-auto object-contain"
-                  />
-                </div>
               </div>
             </div>
+          </section>
+        </div>
+
+        <div class="relative z-30 bg-gradient-to-b from-transparent via-gray-50 to-gray-50 flex flex-col w-full mt-16 min-[425px]:mt-16 md:-mt-24 lg:-mt-[9rem] xl:-mt-[10rem] 2xl:-mt-72">
+          <div class="w-full pointer-events-none">
+            <img
+              src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Part 1 Grid.png"
+              alt="YTAC Grid Pattern"
+              class="w-full h-auto object-contain"
+            />
           </div>
-        </section>
 
         <section
           id="countdown"
-          class="relative z-30 py-12 md:py-20 bg-transparent -mt-10 md:-mt-48 lg:-mt-64 xl:-mt-96"
+          class="relative z-30 py-12 md:py-20 bg-gradient-to-b from-transparent via-gray-50 via-10% to-gray-50 -mt-24 md:-mt-48 lg:-mt-64 xl:-mt-96"
         >
           <div class="max-w-7xl mx-auto px-4 max-[425px]:px-2">
             <div class="w-full flex flex-col md:gap-2 text-center">
@@ -531,41 +656,53 @@
             </div>
 
             <div class="w-full flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 my-16 ">
-              <button class="relative cursor-pointer hover:scale-105 transition-all duration-300 shadow-md shadow-[#fd4a4a] bg-[#fd4a4a] text-white px-6 md:px-10 lg:px-16 py-2 md:py-4 rounded-3xl font-bold uppercase group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden">
-                <span class="relative z-20 flex flex-col items-center space-y-1 md:space-y-2 w-full">
-                  <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">Local Students</span>
-                  <span class="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">REGISTER NOW</span>
-                  <hr class="w-full my-1 border-gray-50" />
-                  <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">DOWNLOAD HANDBOOK <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png" alt="YTAC Arrow Down Circle" class="ml-2 size-5 inline-block object-contain mx-auto"></span>
-                </span>
-                <span class="absolute left-[-75%] top-0 h-full w-[50%] bg-white/20 rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-tl-3xl border-l-2 border-t-2 top-0 left-0"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute group-hover:h-[90%] h-[60%] rounded-tr-3xl border-r-2 border-t-2 top-0 right-0"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[60%] group-hover:h-[90%] rounded-bl-3xl border-l-2 border-b-2 left-0 bottom-0"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-br-3xl border-r-2 border-b-2 right-0 bottom-0"></span>
-              </button>
+              <div class="relative transition-all duration-300 shadow-md shadow-[#fd4a4a] bg-[#fd4a4a] text-white rounded-3xl font-bold uppercase group outline-offset-4 focus-within:outline focus-within:outline-2 focus-within:outline-white focus-within:outline-offset-4 overflow-hidden">
+                <div class="relative z-20 flex flex-col items-center w-full">
+                  <a href="https://forms.gle/AXhtVEawy2pRJHsF6" class="w-full flex flex-col items-center space-y-1 md:space-y-2 px-6 md:px-10 lg:px-16 pt-2 md:pt-4 pb-1 hover:bg-white/10 transition-colors">
+                    <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">Local Students</span>
+                    <span class="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">REGISTER NOW</span>
+                  </a>
+                  <div class="w-full px-6 md:px-10 lg:px-16">
+                    <hr class="w-full my-1 border-gray-50" />
+                  </div>
+                  <a href="https://drive.google.com/file/d/1a2hFF3_IcWaSwpEFxbahhcDtQW81T4gc/view?uuspsharing" target="_blank" class="w-full text-center px-6 md:px-10 lg:px-16 pb-2 md:pb-4 pt-1 hover:bg-white/10 transition-colors group/handbook">
+                    <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg transform transition-transform duration-300 inline-block group-hover/handbook:scale-110">DOWNLOAD HANDBOOK <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png" alt="YTAC Arrow Down Circle" class="ml-2 size-5 inline-block object-contain mx-auto"></span>
+                  </a>
+                </div>
+                <span class="absolute left-[-75%] top-0 h-full w-[50%] bg-white/20 rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-tl-3xl border-l-2 border-t-2 top-0 left-0 pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute group-hover:h-[90%] h-[60%] rounded-tr-3xl border-r-2 border-t-2 top-0 right-0 pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[60%] group-hover:h-[90%] rounded-bl-3xl border-l-2 border-b-2 left-0 bottom-0 pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-br-3xl border-r-2 border-b-2 right-0 bottom-0 pointer-events-none"></span>
+              </div>
 
-              <button class="relative cursor-pointer hover:scale-105 transition-all duration-300 shadow-md shadow-[#0fa8c3] bg-[#0fa8c3] text-white px-6 md:px-10 lg:px-16 py-2 md:py-4 rounded-3xl font-bold uppercase group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden">
-                <span class="relative z-20 flex flex-col items-center space-y-1 md:space-y-2 w-full">
-                  <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">International Students</span>
-                  <span class="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">REGISTER NOW</span>
-                  <hr class="w-full my-1 border-gray-50" />
-                  <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">DOWNLOAD HANDBOOK <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png" alt="YTAC Arrow Down Circle" class="ml-2 size-5 inline-block object-contain mx-auto"></span>
-                </span>
-                <span class="absolute left-[-75%] top-0 h-full w-[50%] bg-white/20 rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-tl-3xl border-l-2 border-t-2 top-0 left-0"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute group-hover:h-[90%] h-[60%] rounded-tr-3xl border-r-2 border-t-2 top-0 right-0"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[60%] group-hover:h-[90%] rounded-bl-3xl border-l-2 border-b-2 left-0 bottom-0"></span>
-                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-br-3xl border-r-2 border-b-2 right-0 bottom-0"></span>
-              </button>
+              <div class="relative transition-all duration-300 shadow-md shadow-[#0fa8c3] bg-[#0fa8c3] text-white rounded-3xl font-bold uppercase group outline-offset-4 focus-within:outline focus-within:outline-2 focus-within:outline-white focus-within:outline-offset-4 overflow-hidden">
+                <div class="relative z-20 flex flex-col items-center w-full">
+                  <a href="https://forms.gle/x2or9seuRRH6sPgS6" class="w-full flex flex-col items-center space-y-1 md:space-y-2 px-6 md:px-10 lg:px-16 pt-2 md:pt-4 pb-1 hover:bg-white/10 transition-colors">
+                    <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg">International Students</span>
+                    <span class="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl">REGISTER NOW</span>
+                  </a>
+                  <div class="w-full px-6 md:px-10 lg:px-16">
+                    <hr class="w-full my-1 border-gray-50" />
+                  </div>
+                  <a href="https://drive.google.com/file/d/19uRwSYl8hKiysj4rZ3seuDpgWUz-102H/view?uuspsharing" target="_blank" class="w-full text-center px-6 md:px-10 lg:px-16 pb-2 md:pb-4 pt-1 hover:bg-white/10 transition-colors group/handbook">
+                    <span class="text-xs lg:text-sm xl:text-base 2xl:text-lg transform transition-transform duration-300 inline-block group-hover/handbook:scale-110">DOWNLOAD HANDBOOK <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/arrow-down-circle.png" alt="YTAC Arrow Down Circle" class="ml-2 size-5 inline-block object-contain mx-auto"></span>
+                  </a>
+                </div>
+                <span class="absolute left-[-75%] top-0 h-full w-[50%] bg-white/20 rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-tl-3xl border-l-2 border-t-2 top-0 left-0 pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute group-hover:h-[90%] h-[60%] rounded-tr-3xl border-r-2 border-t-2 top-0 right-0 pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[60%] group-hover:h-[90%] rounded-bl-3xl border-l-2 border-b-2 left-0 bottom-0 pointer-events-none"></span>
+                <span class="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-br-3xl border-r-2 border-b-2 right-0 bottom-0 pointer-events-none"></span>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="about" class="md:py-20">
+        <section id="about" class="md:py-20 bg-gray-50 relative z-30">
           <div class="w-full">
             <div>
-              <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Button PAJSK FA.jpg" alt="PAJSK Banner" class="w-full h-auto object-contain">
+              <img src="assets/adminhub/landings/ytac/1. Header-Cover-Video/Button PAJSK.jpg" alt="PAJSK Banner" class="w-full h-auto object-contain">
             </div>
             <div class="w-full">
               <iframe src="https://drive.google.com/file/d/1r5oXSPT9vQHR3nvW372dJOimTpvmDqxE/preview" frameborder="0"
@@ -719,7 +856,7 @@
           </section>
 
 
-          <section id="endorsement" class="mt-32 md:my-0 py-12 md:py-20 bg-transparent overflow-hidden">
+          <section id="endorsement" class="mt-32 md:my-0 py-12 md:py-20 bg-gray-50 relative z-30 overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 max-[425px]:px-2 text-center">
               <div x-data="{ showEndorse: false }" x-intersect.threshold.20="showEndorse = true">
                   <h2 class="text-[#3e3791] text-lg md:text-3xl lg:text-5xl font-bold uppercase mb-4 md:mb-6 leading-tight transition-all duration-1000 ease-out"
@@ -777,7 +914,7 @@
             </div>
           </section>
 
-          <section id="competition" class="">
+          <section id="competition" class="bg-gray-50 relative z-30">
             <div class="w-full bg-gradient-to-b from-[#b0e8f6] to-[#0fa8c3] mb-12"
                  x-data="{ showHeader: false }"
                  x-intersect.threshold.20="showHeader = true">
@@ -1081,7 +1218,7 @@
               </div>
 
               <div class="mt-16 text-center">
-                <a href="#home" class="group relative inline-flex items-center justify-center px-2 md:px-8 py-4 bg-white text-[#3e3791] font-black text-sm md:text-xl lg:text-2xl uppercase rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <a href="#countdown" class="group relative inline-flex items-center justify-center px-2 md:px-8 py-4 bg-white text-[#3e3791] font-black text-sm md:text-xl lg:text-2xl uppercase rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
                     <span>REGISTER HERE TO JOIN THE COMPETITION</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3 group-hover:translate-x-2 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -1211,7 +1348,7 @@
                     </p>
 
                     <div class="flex flex-col items-center justify-center pt-8">
-                        <a href="#register" class="group relative inline-flex items-center justify-center gap-2 md:gap-4 bg-[#fcd34d] hover:bg-[#fbbf24] text-[#3e3791] px-6 py-4 md:px-10 md:py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                        <a href="#countdown" class="group relative inline-flex items-center justify-center gap-2 md:gap-4 bg-[#fcd34d] hover:bg-[#fbbf24] text-[#3e3791] px-6 py-4 md:px-10 md:py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                             <span class="text-lg md:text-3xl font-black uppercase tracking-wide">BE PART OF YTAC 2026</span>
                         </a>
                     </div>
@@ -1229,7 +1366,7 @@
 
       <script>
         document.addEventListener('DOMContentLoaded', function() {
-          const END_TIME_STRING = "2026-01-01T00:00:00";
+          const END_TIME_STRING = "2026-01-07T00:00:00";
 
           const targetDate = new Date(END_TIME_STRING).getTime();
 
@@ -1261,6 +1398,7 @@
           setInterval(updateCountdown, 1000);
         });
       </script>
+      </div>
     </main>
 
     <footer class="bg-white pt-16 border-t border-gray-100">
